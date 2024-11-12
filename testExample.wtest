@@ -1,9 +1,67 @@
-import example.pepita
+import actividades.*
+import socios.*
 
-describe "group of tests for pepita" {
-
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+describe "test actividades" {
+/*una excursión a ciudad normal (no tropical) en la que se visitan 4 atracciones, lleva 2 días, no implica esfuerzo, y no sirve para broncearse.
+una excursión a ciudad tropical en la que se visitan 4 atracciones, lleva 3 días, no implica esfuerzo, y sí sirve para broncearse.
+una excursión a ciudad normal (no tropical) en la que se visitan 8 atracciones, lleva 4 días, implica esfuerzo, y no sirve para broncearse.
+una excursión a ciudad tropical en la que se visitan 8 atracciones, lleva 5 días, implica esfuerzo, y sirve para broncearse.
+una excursión a ciudad tropical en la que se visitan 10 atracciones, lleva 6 días, no implica esfuerzo, y sí sirve para broncearse.*/
+  test "una excursión a ciudad normal (no tropical) en la que se visitan 4 atracciones, lleva 2 días, no implica esfuerzo, y no sirve para broncearse" {
+    const ciudad1 = new ExcursionCiudad(idiomas = ["Español"],atracciones = 4)
+    assert.equals(2, ciudad1.dias())
+    assert.notThat(ciudad1.implicaEsfuerzo())
+    assert.notThat(ciudad1.sirveParaBroncearse())
+    
+  }
+  
+  test "una excursión a ciudad tropical en la que se visitan 4 atracciones, lleva 3 días, no implica esfuerzo, y sí sirve para broncearse." {
+    const ciudad1 = new ExcursionCiudadTropical(idiomas = ["Español"],atracciones = 4)
+    assert.equals(3, ciudad1.dias())
+    assert.notThat(ciudad1.implicaEsfuerzo())
+    assert.that(ciudad1.sirveParaBroncearse())
+    
   }
 
+  /*una salida de 100 kilómetros a un lugar con 130 días de sol por año: lleva 2 días, implica esfuerzo, y no sirve para broncearse.
+una salida de 50 kilómetros a un lugar con 240 días de sol por año: lleva 1 día, no implica esfuerzo, y sí sirve para broncearse.
+una salida de 250 kilómetros a un lugar con 130 días de sol por año: lleva 5 días, implica esfuerzo, y sirve para broncearse.*/
+  test "una salida de 100 kilómetros a un lugar con 130 días de sol por año: lleva 2 días, implica esfuerzo, y no sirve para broncearse." {
+    const trekking = new SalidaTrekking (idiomas = ["Español"],diasSol = 130, kmSendero = 100)
+    assert.equals(2, trekking.dias())
+    assert.that(trekking.implicaEsfuerzo())
+    assert.notThat(trekking.sirveParaBroncearse())
+    
+  }
+  test "una salida de 50 kilómetros a un lugar con 240 días de sol por año: lleva 1 día, no implica esfuerzo, y sí sirve para broncearse." {
+    const trekking = new SalidaTrekking (idiomas = ["Español"],diasSol = 240, kmSendero = 50)
+    assert.equals(1, trekking.dias())
+    assert.notThat(trekking.implicaEsfuerzo())
+    assert.that(trekking.sirveParaBroncearse())
+    
+  }
+
+  test "En las clases de gimnasia se usa únicamente español, llevan 1 día,Siempre implican esfuerzo, y nunca sirven para broncearse." {
+    const gym = new ClaseGimnasia(idiomas = ["frances"])
+    assert.that(gym.idiomas() == ["Español"])
+    assert.equals(1, gym.dias())
+    assert.that(gym.implicaEsfuerzo())
+    assert.notThat(gym.sirveParaBroncearse())
+  }
+
+  test "roque un socio que hizo 2 viajes a la playa, con longitudes de 1000 y 2000 metros respectivamente, y que tiene un máximo de 2 actividades.
+      roque es adorador del sol roque.actividadesEsforzadas() devuelve una colección que tiene solamente el viaje de 2000 metros de playa.
+      si registramos que Roque realiza una clase de gimnasia, devuelve un error." {
+    const gym = new ClaseGimnasia(idiomas = ["frances"])
+    const playa1 = new ViajePlaya(idiomas = ["Español"],largo = 1000)
+    const playa2 = new ViajePlaya(idiomas = ["Español"],largo = 2000)
+    const roque = new SocioTranquilo(edad = 30, idiomas = ["Español"],actividadesRealizadas = [playa1,playa2], maximoActividades = 2)
+
+    assert.that(roque.esAdoradorDelSol())
+    assert.equals([playa2], roque.actividadesEsforzadas())
+    //assert.equals(value, expression)
+    assert.throwsException({roque.registrarActividad(gym)})
+
+
+  }
 }
